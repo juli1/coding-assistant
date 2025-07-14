@@ -1,0 +1,54 @@
+package agent
+
+import (
+	"coding-assistant/internal"
+	"context"
+	"fmt"
+
+	"github.com/tmc/langchaingo/llms"
+	"github.com/tmc/langchaingo/llms/anthropic"
+	"github.com/tmc/langchaingo/llms/googleai"
+	"github.com/tmc/langchaingo/llms/openai"
+	"github.com/tmc/langchaingo/memory"
+	"github.com/tmc/langchaingo/schema"
+
+	"coding-assistant/internal/model"
+)
+
+type Agent struct {
+	llm    llms.Model
+	memory schema.ChatMessageHistory
+}
+
+func NewAgent(modelType model.Model) (*Agent, error) {
+	var llm llms.Model
+	var err error
+
+	switch modelType {
+	case model.ModelGPT4_1:
+		llm, err = openai.New()
+	case model.ModelCodex:
+		// NOTE: This is an assumption. Adjust if Codex requires a different client or model name.
+		llm, err = openai.New(openai.WithModel("code-davinci-002")) // Example model name for Codex
+	case model.ModelClaude3_5Sonnet:
+		// NOTE: This is an assumption. Adjust if Claude 3.5 Sonnet requires specific Anthropic client configuration.
+		llm, err = anthropic.New()
+	case model.ModelGemini2_5Pro:
+		llm, err = googleai.New(context.Background(), googleai.WithDefaultModel("gemini-2.5-pro"))
+	default:
+		return nil, fmt.Errorf("unsupported model type: %v", modelType)
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create LLM: %w", err)
+	}
+
+	return &Agent{
+		llm:    llm,
+		memory: memory.NewChatMessageHistory(),
+	}, nil
+}
+
+func (agent *Agent) Handle(input string) (string, error) {
+	return "", internal.ErrInvalidInput
+}
