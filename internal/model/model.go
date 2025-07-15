@@ -10,6 +10,10 @@ const (
 	ModelGemini2_5Pro
 )
 
+var AllModels []Model = []Model{
+	ModelGPT4_1, ModelCodex, ModelClaude3_5Sonnet, ModelGemini2_5Pro,
+}
+
 func (m Model) String() string {
 	switch m {
 	case ModelGPT4_1:

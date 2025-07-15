@@ -1,0 +1,4 @@
+This tool is used to find some content into the set of files. It will returns the list of files that
+contains/match this string.
+
+Input should be the string being searched.

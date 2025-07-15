@@ -1,9 +1,15 @@
 package agent
 
 import (
-	"coding-assistant/internal"
+	"coding-assistant/internal/agent/prompt"
+	"coding-assistant/internal/agent/tools/find"
+	"coding-assistant/internal/agent/tools/grep"
+	"coding-assistant/internal/agent/tools/read_file"
+	"coding-assistant/internal/agent/tools/write_file"
 	"context"
 	"fmt"
+	"github.com/tmc/langchaingo/agents"
+	"github.com/tmc/langchaingo/chains"
 
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/anthropic"
@@ -11,16 +17,19 @@ import (
 	"github.com/tmc/langchaingo/llms/openai"
 	"github.com/tmc/langchaingo/memory"
 	"github.com/tmc/langchaingo/schema"
+	"github.com/tmc/langchaingo/tools"
 
 	"coding-assistant/internal/model"
 )
 
 type Agent struct {
-	llm    llms.Model
-	memory schema.ChatMessageHistory
+	llm                 llms.Model
+	memory              schema.ChatMessageHistory
+	repositoryDirectory string
+	debug               bool
 }
 
-func NewAgent(modelType model.Model) (*Agent, error) {
+func NewAgent(modelType model.Model, directory string, debug bool) (*Agent, error) {
 	var llm llms.Model
 	var err error
 
@@ -44,11 +53,56 @@ func NewAgent(modelType model.Model) (*Agent, error) {
 	}
 
 	return &Agent{
-		llm:    llm,
-		memory: memory.NewChatMessageHistory(),
+		llm:                 llm,
+		memory:              memory.NewChatMessageHistory(),
+		repositoryDirectory: directory,
+		debug:               debug,
 	}, nil
 }
 
-func (agent *Agent) Handle(input string) (string, error) {
-	return "", internal.ErrInvalidInput
+func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
+	messages := make([]llms.MessageContent, 0)
+	messages = append(messages, llms.MessageContent{
+		Role: llms.ChatMessageTypeSystem,
+		Parts: []llms.ContentPart{
+			llms.TextContent{Text: prompt.GetSystemPrompt()},
+		},
+	})
+	messages = append(messages, llms.MessageContent{
+		Role: llms.ChatMessageTypeHuman,
+		Parts: []llms.ContentPart{
+			llms.TextContent{Text: input},
+		},
+	})
+
+	agentTools := make([]tools.Tool, 0)
+	agentTools = append(agentTools, find.Find{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, read_file.ReadFile{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, write_file.WriteFile{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, grep.Grep{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+
+	a := agents.NewOneShotAgent(agent.llm, agentTools, agents.WithMaxIterations(3))
+	executor := agents.NewExecutor(a)
+
+	answer, err := chains.Run(context.Background(), executor, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AgentResponse{
+		Response: answer,
+	}, nil
+
 }

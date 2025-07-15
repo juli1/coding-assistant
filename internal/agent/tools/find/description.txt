@@ -1,0 +1,3 @@
+This tool is used to find a file which name matches a given pattern.
+
+The input is the pattern being searched for. The result is the list of files that matches the pattern.

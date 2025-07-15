@@ -1,0 +1,4 @@
+Use this tool to write content to a file.
+The tool will create the file if it does not exist.
+The input to this tool is a string with the following format:
+<file_path>\n<content>

@@ -1,0 +1,5 @@
+Use this tool to read the content of a file.
+The tool will return the content of the file.
+Do not use this tool to create a file.
+
+The input is the path of the file to open. The tool returns the content of the file.

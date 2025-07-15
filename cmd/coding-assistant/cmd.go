@@ -31,11 +31,11 @@ var rootCmd = &cobra.Command{
 func runAssistant(directory string, modelName string, debugMode bool) {
 	modelType := modelModule.ParseModel(modelName)
 	if modelType == modelModule.ModelUnknown {
-		fmt.Printf("Invalid model: %s. Allowed models are: gpt-4.1, codex, claude-3.5-sonnet\n", modelName)
+		fmt.Printf("Invalid model: %s. Allowed models are: %s\n", modelName, modelModule.AllModels)
 		os.Exit(1)
 	}
 
-	agent, err := agent.NewAgent(modelType)
+	codingAgent, err := agent.NewAgent(modelType, directory, debugMode)
 	if err != nil {
 		fmt.Printf("Failed to create agent: %v\n", err)
 		os.Exit(1)
@@ -69,13 +69,13 @@ func runAssistant(directory string, modelName string, debugMode bool) {
 
 		// Process the input here
 		fmt.Printf("Processing: %s\n", input)
-		response, err := agent.Handle(input)
+		response, err := codingAgent.Handle(input)
 		if err != nil {
 			fmt.Printf("Failed to handle request: %v\n", err)
 			continue
 		}
 
-		fmt.Printf("Agent: %s\n", response)
+		fmt.Printf("Agent: %s\n", response.Response)
 
 	}
 	if err := scanner.Err(); err != nil {
