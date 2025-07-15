@@ -37,5 +37,5 @@ go run cmd/coding-assistant/cmd.go . --model claude-3.5-sonnet --debug
 
 ### Flags
 
-*   `--model`: The model to use for coding assistance. Allowed values are `gpt-4.1`, `codex`, and `claude-3.5-sonnet`.
+*   `--model`: The model to use for coding assistance. Allowed values are `gpt-4.1`, `codex`, `claude-3.5-sonnet`, and `gemini-2.5-pro`.
 *   `--debug`: Enable debug mode (optional).
