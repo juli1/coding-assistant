@@ -37,7 +37,7 @@ func (l Ls) Call(ctx context.Context, input string) (string, error) {
 	if path == "" {
 		path = l.RepositoryDirectory
 	} else {
-		filepath.Join(l.RepositoryDirectory, input)
+		path = filepath.Join(l.RepositoryDirectory, input)
 	}
 
 	if l.Debug {
@@ -46,7 +46,7 @@ func (l Ls) Call(ctx context.Context, input string) (string, error) {
 
 	files, err := os.ReadDir(path)
 	if err != nil {
-		return "", fmt.Errorf("could not read directory: %w", err)
+		return fmt.Sprintf("could not read file or directory %s", input), nil
 	}
 
 	var output string
@@ -60,6 +60,10 @@ func (l Ls) Call(ctx context.Context, input string) (string, error) {
 		permissions := info.Mode().String()
 
 		output += fmt.Sprintf("%s %s\n", permissions, file.Name())
+	}
+
+	if l.Debug {
+		fmt.Printf("[ls] %s return \n", output)
 	}
 
 	return output, nil
