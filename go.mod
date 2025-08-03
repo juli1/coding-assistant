@@ -3,6 +3,7 @@ module coding-assistant
 go 1.24.3
 
 require (
+	github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.9.0
 	github.com/tmc/langchaingo v0.1.13

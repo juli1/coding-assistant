@@ -82,7 +82,8 @@ func (g Grep) Call(ctx context.Context, input string) (string, error) {
 	}
 	res := strings.Join(foundFiles, "\n")
 	if g.Debug {
-		fmt.Printf("[grep] returning\n%s\nend\n", res)
+		fmt.Printf("[grep] returning\n%s\n", res)
+		fmt.Printf("[grep] end returning\n")
 	}
 
 	return res, nil

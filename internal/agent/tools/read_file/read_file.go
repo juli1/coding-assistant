@@ -38,19 +38,25 @@ func (r ReadFile) Description() string {
 
 // Call calls the tool with the given input.
 func (r ReadFile) Call(ctx context.Context, input string) (string, error) {
-	path := filepath.Join(r.RepositoryDirectory, input)
-
 	if r.Debug {
 		fmt.Printf("[readfile] %s\n", input)
 	}
 
+	path := filepath.Join(r.RepositoryDirectory, input)
+
 	if r.Debug {
-		fmt.Printf("[read tool] Reading file %s\n", path)
+		fmt.Printf("[readfile] Reading file %s\n", path)
 	}
 
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return "", err
+		if r.Debug {
+			fmt.Printf("[readfile] failed to read %s", input)
+		}
+		return fmt.Sprintf("cannot open file %s", input), nil
+	}
+	if r.Debug {
+		fmt.Printf("[readfile] succeed to read %s", input)
 	}
 	return string(data), nil
 }

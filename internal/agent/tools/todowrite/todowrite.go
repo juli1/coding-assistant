@@ -32,7 +32,7 @@ func (t *TodoWrite) Description() string {
 func (t *TodoWrite) Call(ctx context.Context, input string) (string, error) {
 	*t.TodoList = input
 	if t.Debug {
-		fmt.Printf("[todowrite] %s\n", input)
+		fmt.Printf("[todowrite] writing the following to-do list\n---\n%s\n---\n", input)
 	}
-	return "TODO list updated.", nil
+	return "to-do list updated.", nil
 }

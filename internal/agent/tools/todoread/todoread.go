@@ -31,7 +31,7 @@ func (t *TodoRead) Description() string {
 
 func (t *TodoRead) Call(ctx context.Context, input string) (string, error) {
 	if t.Debug {
-		fmt.Printf("[todoread] %s\n", input)
+		fmt.Printf("[todowrite] writing the following to-do list\n---\n%s\n---\n", *t.TodoList)
 	}
 	return *t.TodoList, nil
 }

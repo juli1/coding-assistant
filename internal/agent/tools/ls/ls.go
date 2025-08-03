@@ -41,11 +41,14 @@ func (l Ls) Call(ctx context.Context, input string) (string, error) {
 	}
 
 	if l.Debug {
-		fmt.Printf("[ls] %s\n", path)
+		fmt.Printf("[ls] %s\n", input)
 	}
 
 	files, err := os.ReadDir(path)
 	if err != nil {
+		if l.Debug {
+			fmt.Printf("[ls] path does not exist\n")
+		}
 		return fmt.Sprintf("could not read file or directory %s", input), nil
 	}
 

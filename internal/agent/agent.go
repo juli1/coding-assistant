@@ -125,11 +125,15 @@ func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 		Debug:               agent.debug,
 	})
 
-	a := agents.NewOneShotAgent(agent.llm, agentTools, agents.WithMaxIterations(3))
+	a := agents.NewOneShotAgent(agent.llm, agentTools, agents.WithMaxIterations(50))
 	executor := agents.NewExecutor(a)
 
 	answer, err := chains.Run(context.Background(), executor, input)
 	if err != nil {
+
+		if agent.debug {
+			fmt.Printf("agent failed to handle task")
+		}
 		return nil, err
 	}
 

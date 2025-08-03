@@ -1,5 +1,7 @@
 package model
 
+import "fmt"
+
 type Model int
 
 const (
@@ -29,17 +31,17 @@ func (m Model) String() string {
 	}
 }
 
-func ParseModel(s string) Model {
+func FromString(s string) (Model, error) {
 	switch s {
 	case "gpt-4.1":
-		return ModelGPT4_1
+		return ModelGPT4_1, nil
 	case "codex":
-		return ModelCodex
+		return ModelCodex, nil
 	case "claude-3.5-sonnet":
-		return ModelClaude3_5Sonnet
+		return ModelClaude3_5Sonnet, nil
 	case "gemini-2.5-pro":
-		return ModelGemini2_5Pro
+		return ModelGemini2_5Pro, nil
 	default:
-		return ModelUnknown
+		return ModelUnknown, fmt.Errorf("unknown model: %s", s)
 	}
 }
