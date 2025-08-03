@@ -41,6 +41,10 @@ func (r ReadFile) Call(ctx context.Context, input string) (string, error) {
 	path := filepath.Join(r.RepositoryDirectory, input)
 
 	if r.Debug {
+		fmt.Printf("[readfile] %s\n", input)
+	}
+
+	if r.Debug {
 		fmt.Printf("[read tool] Reading file %s\n", path)
 	}
 

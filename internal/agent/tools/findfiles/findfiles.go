@@ -35,6 +35,10 @@ func (f *FindFiles) Call(ctx context.Context, input string) (string, error) {
 		return "", fmt.Errorf("could not glob pattern: %w", err)
 	}
 
+	if f.Debug {
+		fmt.Printf("[findfiles] %s\n", input)
+	}
+
 	var output string
 	for _, file := range files {
 		output += file + "\n"

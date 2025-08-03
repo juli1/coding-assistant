@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/tmc/langchaingo/tools"
 )
@@ -34,7 +35,13 @@ func (l Ls) Description() string {
 func (l Ls) Call(ctx context.Context, input string) (string, error) {
 	path := input
 	if path == "" {
-		path = "."
+		path = l.RepositoryDirectory
+	} else {
+		filepath.Join(l.RepositoryDirectory, input)
+	}
+
+	if l.Debug {
+		fmt.Printf("[ls] %s\n", path)
 	}
 
 	files, err := os.ReadDir(path)

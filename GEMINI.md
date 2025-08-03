@@ -1,3 +1,6 @@
+## Coding Rules
+ - in `internal/agent/agent.go`, always keep `RepositoryDirectory` and `Debug` to build or instantiate each new tool
+
 
 ## Git-related operations
  - Never automatically commit any change

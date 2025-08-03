@@ -3,6 +3,7 @@ package todoread
 import (
 	"context"
 	_ "embed"
+	"fmt"
 
 	"github.com/tmc/langchaingo/tools"
 )
@@ -29,5 +30,8 @@ func (t *TodoRead) Description() string {
 }
 
 func (t *TodoRead) Call(ctx context.Context, input string) (string, error) {
+	if t.Debug {
+		fmt.Printf("[todoread] %s\n", input)
+	}
 	return *t.TodoList, nil
 }

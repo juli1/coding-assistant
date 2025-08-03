@@ -7,6 +7,7 @@ import (
 	"coding-assistant/internal/agent/tools/grep"
 	"coding-assistant/internal/agent/tools/ls"
 	"coding-assistant/internal/agent/tools/read_file"
+	"coding-assistant/internal/agent/tools/searchtext"
 	"coding-assistant/internal/agent/tools/todoread"
 	"coding-assistant/internal/agent/tools/todowrite"
 	"coding-assistant/internal/agent/tools/write_file"
@@ -116,6 +117,10 @@ func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 	})
 	agentTools = append(agentTools, &todowrite.TodoWrite{
 		TodoList:            &agent.todoList,
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, &searchtext.SearchText{
 		RepositoryDirectory: agent.repositoryDirectory,
 		Debug:               agent.debug,
 	})

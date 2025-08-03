@@ -1,0 +1,1 @@
+SearchText is a tool that searches for a specific regular string in all files in the directory available to the agent. The return is the list of files (with a path relative to the agent directory) that contains the text.

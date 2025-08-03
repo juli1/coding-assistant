@@ -3,6 +3,7 @@ package todowrite
 import (
 	"context"
 	_ "embed"
+	"fmt"
 
 	"github.com/tmc/langchaingo/tools"
 )
@@ -30,5 +31,8 @@ func (t *TodoWrite) Description() string {
 
 func (t *TodoWrite) Call(ctx context.Context, input string) (string, error) {
 	*t.TodoList = input
+	if t.Debug {
+		fmt.Printf("[todowrite] %s\n", input)
+	}
 	return "TODO list updated.", nil
 }
