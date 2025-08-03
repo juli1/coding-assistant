@@ -1,0 +1,2 @@
+TodoWrite is a tool that writes to the to-do list. This to-do list is the list of things to do to finish the current
+task.

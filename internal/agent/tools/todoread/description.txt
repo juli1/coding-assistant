@@ -1,0 +1,4 @@
+TodoRead is a tool that reads the to-do list. Use this tool to read the current to-do list for the current task.
+Use this tool very often and proactively.
+
+This to-do list contains the list of tasks to execute and run.

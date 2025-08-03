@@ -3,8 +3,12 @@ package agent
 import (
 	"coding-assistant/internal/agent/prompt"
 	"coding-assistant/internal/agent/tools/find"
+	"coding-assistant/internal/agent/tools/findfiles"
 	"coding-assistant/internal/agent/tools/grep"
+	"coding-assistant/internal/agent/tools/ls"
 	"coding-assistant/internal/agent/tools/read_file"
+	"coding-assistant/internal/agent/tools/todoread"
+	"coding-assistant/internal/agent/tools/todowrite"
 	"coding-assistant/internal/agent/tools/write_file"
 	"context"
 	"fmt"
@@ -27,6 +31,7 @@ type Agent struct {
 	memory              schema.ChatMessageHistory
 	repositoryDirectory string
 	debug               bool
+	todoList            string
 }
 
 func NewAgent(modelType model.Model, directory string, debug bool) (*Agent, error) {
@@ -60,6 +65,10 @@ func NewAgent(modelType model.Model, directory string, debug bool) (*Agent, erro
 	}, nil
 }
 
+func (agent *Agent) ResetToto() {
+	agent.todoList = ""
+}
+
 func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 	messages := make([]llms.MessageContent, 0)
 	messages = append(messages, llms.MessageContent{
@@ -76,19 +85,37 @@ func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 	})
 
 	agentTools := make([]tools.Tool, 0)
-	agentTools = append(agentTools, find.Find{
+	agentTools = append(agentTools, &find.Find{
 		RepositoryDirectory: agent.repositoryDirectory,
 		Debug:               agent.debug,
 	})
-	agentTools = append(agentTools, read_file.ReadFile{
+	agentTools = append(agentTools, &read_file.ReadFile{
 		RepositoryDirectory: agent.repositoryDirectory,
 		Debug:               agent.debug,
 	})
-	agentTools = append(agentTools, write_file.WriteFile{
+	agentTools = append(agentTools, &write_file.WriteFile{
 		RepositoryDirectory: agent.repositoryDirectory,
 		Debug:               agent.debug,
 	})
-	agentTools = append(agentTools, grep.Grep{
+	agentTools = append(agentTools, &grep.Grep{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, &ls.Ls{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, &findfiles.FindFiles{
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, &todoread.TodoRead{
+		TodoList:            &agent.todoList,
+		RepositoryDirectory: agent.repositoryDirectory,
+		Debug:               agent.debug,
+	})
+	agentTools = append(agentTools, &todowrite.TodoWrite{
+		TodoList:            &agent.todoList,
 		RepositoryDirectory: agent.repositoryDirectory,
 		Debug:               agent.debug,
 	})

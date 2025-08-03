@@ -67,6 +67,8 @@ func runAssistant(directory string, modelName string, debugMode bool) {
 			break
 		}
 
+		codingAgent.ResetToto()
+
 		// Process the input here
 		fmt.Printf("Processing: %s\n", input)
 		response, err := codingAgent.Handle(input)

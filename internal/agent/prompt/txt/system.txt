@@ -8,6 +8,8 @@ from the user the more concisely possible and go to the point.
 
 ## Coding Practices
 
+ - write code that is syntactically correct
+ - if you can, use tools that help you check the correctness of your code
 
 ## Tools
 
@@ -15,3 +17,6 @@ Use all the tools available to you to perform the task:
  - ReadFile: read a file, give the file as argument
  - Grep: find a pattern within a file
  - WriteFile: write a file, given the path and content as argument
+ - TodoRead: read your TODO list
+ - TodoWrite: write your TODO list
+ - FindFiles: find files based on a glob pattern
