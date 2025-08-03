@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"github.com/tmc/langchaingo/agents"
 	"github.com/tmc/langchaingo/chains"
+	"github.com/tmc/langchaingo/prompts"
 
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/anthropic"
@@ -71,19 +72,6 @@ func (agent *Agent) ResetToto() {
 }
 
 func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
-	messages := make([]llms.MessageContent, 0)
-	messages = append(messages, llms.MessageContent{
-		Role: llms.ChatMessageTypeSystem,
-		Parts: []llms.ContentPart{
-			llms.TextContent{Text: prompt.GetSystemPrompt()},
-		},
-	})
-	messages = append(messages, llms.MessageContent{
-		Role: llms.ChatMessageTypeHuman,
-		Parts: []llms.ContentPart{
-			llms.TextContent{Text: input},
-		},
-	})
 
 	agentTools := make([]tools.Tool, 0)
 	agentTools = append(agentTools, &find.Find{
@@ -128,11 +116,19 @@ func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 	a := agents.NewOneShotAgent(agent.llm, agentTools, agents.WithMaxIterations(50))
 	executor := agents.NewExecutor(a)
 
-	answer, err := chains.Run(context.Background(), executor, input)
+	promptTemplate := prompts.NewPromptTemplate(prompt.GetSystemPrompt(), []string{"task"})
+	promptToUse, err := promptTemplate.Format(map[string]any{
+		"task": input,
+	})
+	if err != nil {
+		fmt.Printf("cannot format prompt: %s\n", err)
+	}
+
+	answer, err := chains.Run(context.Background(), executor, promptToUse)
 	if err != nil {
 
 		if agent.debug {
-			fmt.Printf("agent failed to handle task")
+			fmt.Printf("agent failed to handle task\n")
 		}
 		return nil, err
 	}

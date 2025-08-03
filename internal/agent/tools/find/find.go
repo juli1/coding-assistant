@@ -1,6 +1,7 @@
 package find
 
 import (
+	toolsModule "coding-assistant/internal/agent/tools"
 	"context"
 	_ "embed"
 	"fmt"
@@ -44,7 +45,7 @@ func (g Find) Call(ctx context.Context, input string) (string, error) {
 	}
 
 	err := filepath.Walk(g.RepositoryDirectory, func(path string, info os.FileInfo, err error) error {
-		
+
 		if err != nil {
 			return err
 		}
@@ -53,8 +54,11 @@ func (g Find) Call(ctx context.Context, input string) (string, error) {
 		if err != nil {
 			return err
 		}
-		if strings.HasPrefix(relPath, ".git") {
-			return nil
+
+		for _, d := range toolsModule.DirectoriesToIgnore {
+			if strings.HasPrefix(relPath, d) {
+				return nil
+			}
 		}
 
 		if info.IsDir() {

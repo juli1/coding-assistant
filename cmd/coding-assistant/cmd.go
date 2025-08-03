@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/chzyer/readline"
 	"github.com/spf13/cobra"
@@ -83,6 +84,11 @@ func run(cmd *cobra.Command, args []string) {
 	for {
 		line, err := rl.Readline()
 		if err != nil { // io.EOF, readline.ErrInterrupt
+			break
+		}
+
+		if strings.EqualFold(line, "exit") {
+			println("kthxbye")
 			break
 		}
 
