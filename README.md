@@ -35,7 +35,16 @@ go run cmd/coding-assistant/cmd.go [directory] --model [model_name] --debug
 go run cmd/coding-assistant/cmd.go . --model claude-3.5-sonnet --debug
 ```
 
+### Using Ollama
+
+You can also use models from [Ollama](httpss://ollama.ai/). Make sure you have Ollama installed and running.
+
+To use an Ollama model, simply pass the model name as `ollama` and use the option `ollama-model` to specify the model to use
+```sh
+./coding-assistant . --model ollama --ollama-model llama2
+```
+
 ### Flags
 
-*   `--model`: The model to use for coding assistance. Allowed values are `gpt-4.1`, `codex`, `claude-3.5-sonnet`, and `gemini-2.5-pro`.
+*   `--model`: The model to use for coding assistance. Allowed values are `gpt-4.1`, `claude-3.5-sonnet`, `ollama` and `gemini-2.5-pro`.
 *   `--debug`: Enable debug mode (optional).
