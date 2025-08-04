@@ -128,7 +128,7 @@ func (agent *Agent) Handle(input string) (*model.AgentResponse, error) {
 	if err != nil {
 
 		if agent.debug {
-			fmt.Printf("agent failed to handle task\n")
+			fmt.Printf("agent failed to handle task %s\n", err)
 		}
 		return nil, err
 	}

@@ -33,6 +33,9 @@ func (st *SearchText) Description() string {
 }
 
 func (st *SearchText) Call(ctx context.Context, input string) (string, error) {
+	if st.Debug {
+		fmt.Printf("[searchtext] searching text: %s\n", input)
+	}
 	re, err := regexp.Compile(input)
 	if err != nil {
 		return "", fmt.Errorf("invalid regex pattern: %w", err)

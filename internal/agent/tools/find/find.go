@@ -47,16 +47,22 @@ func (g Find) Call(ctx context.Context, input string) (string, error) {
 	err := filepath.Walk(g.RepositoryDirectory, func(path string, info os.FileInfo, err error) error {
 
 		if err != nil {
-			return err
+			return nil
 		}
 
 		relPath, err := filepath.Rel(g.RepositoryDirectory, path)
 		if err != nil {
-			return err
+			return nil
 		}
 
 		for _, d := range toolsModule.DirectoriesToIgnore {
 			if strings.HasPrefix(relPath, d) {
+				return nil
+			}
+		}
+
+		for _, i := range toolsModule.FindFilesIgnoreSuffix {
+			if strings.HasSuffix(relPath, i) {
 				return nil
 			}
 		}

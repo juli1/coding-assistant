@@ -1,6 +1,7 @@
 package grep
 
 import (
+	toolsModule "coding-assistant/internal/agent/tools"
 	"context"
 	_ "embed"
 	"fmt"
@@ -47,16 +48,18 @@ func (g Grep) Call(ctx context.Context, input string) (string, error) {
 
 	err := filepath.Walk(g.RepositoryDirectory, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			return err
+			return nil
 		}
 
 		relPath, err := filepath.Rel(g.RepositoryDirectory, path)
 		if err != nil {
-			return err
+			return nil
 		}
 
-		if strings.HasPrefix(relPath, ".git") {
-			return nil
+		for _, d := range toolsModule.DirectoriesToIgnore {
+			if strings.HasPrefix(relPath, d) {
+				return nil
+			}
 		}
 
 		if info.IsDir() {
@@ -65,12 +68,18 @@ func (g Grep) Call(ctx context.Context, input string) (string, error) {
 
 		content, err := os.ReadFile(path)
 		if err != nil {
-			return err
+			return nil
+		}
+
+		for _, i := range toolsModule.FindFilesIgnoreSuffix {
+			if strings.HasSuffix(relPath, i) {
+				return nil
+			}
 		}
 
 		if strings.Contains(string(content), input) {
 			if g.Debug {
-				fmt.Printf("[find] path %s match input %s\n", path, input)
+				fmt.Printf("[grep] path %s match input %s\n", path, input)
 			}
 			foundFiles = append(foundFiles, path)
 		}

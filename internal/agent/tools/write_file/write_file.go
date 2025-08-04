@@ -3,6 +3,7 @@ package write_file
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"os"
 	"strings"
 
@@ -37,6 +38,9 @@ func (w WriteFile) Description() string {
 
 // Call calls the tool with the given input.
 func (w WriteFile) Call(ctx context.Context, input string) (string, error) {
+	if w.Debug {
+		fmt.Printf("[writefile] writing file")
+	}
 	parts := strings.SplitN(input, "\n", 2)
 	if len(parts) != 2 {
 		return "", os.ErrInvalid
