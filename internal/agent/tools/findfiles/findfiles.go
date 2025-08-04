@@ -44,5 +44,13 @@ func (f *FindFiles) Call(ctx context.Context, input string) (string, error) {
 		output += file + "\n"
 	}
 
+	if f.Debug {
+		fmt.Printf("[findfiles] output |%s|\n", output)
+	}
+
+	if len(output) == 0 {
+		return "no file found", nil
+	}
+
 	return output, nil
 }

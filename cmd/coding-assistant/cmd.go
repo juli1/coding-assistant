@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	debug     bool
-	modelType string
+	debug       bool
+	modelType   string
+	ollamaModel string
 )
 
 var rootCmd = &cobra.Command{
@@ -34,7 +35,8 @@ func main() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&debug, "debug", "d", false, "Enable debug mode")
-	rootCmd.PersistentFlags().StringVarP(&modelType, "model", "m", "gemini-2.5-pro", "Specify the model to use (e.g., gpt-4.1, codex, claude-3.5-sonnet, gemini-2.5-pro")
+	rootCmd.PersistentFlags().StringVarP(&modelType, "model", "m", "gemini-2.5-pro", "Specify the model to use (e.g., gpt-4.1, ollama, claude-3.5-sonnet, gemini-2.5-pro")
+	rootCmd.PersistentFlags().StringVarP(&ollamaModel, "ollama-model", "o", "llama3", "If using ollama, what model do you use")
 }
 
 func run(cmd *cobra.Command, args []string) {
@@ -45,7 +47,10 @@ func run(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed to parse model type: %v", err)
 	}
 
-	a, err := agent.NewAgent(parsedModel, directory, debug)
+	a, err := agent.NewAgent(agent.AgentModelConfiguration{
+		Model:       parsedModel,
+		OllamaModel: ollamaModel,
+	}, directory, debug)
 	if err != nil {
 		log.Fatalf("Failed to create agent: %v", err)
 	}
@@ -70,7 +75,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	rl, err := readline.NewEx(&readline.Config{
 		Prompt:          "> ",
-		HistoryFile:     "/tmp/coding-assistant.tmp",
+		HistoryFile:     tmpFilename,
 		HistoryLimit:    50,
 		AutoComplete:    nil,
 		InterruptPrompt: "^C",

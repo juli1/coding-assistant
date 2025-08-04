@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"github.com/tmc/langchaingo/agents"
 	"github.com/tmc/langchaingo/chains"
+	"github.com/tmc/langchaingo/llms/ollama"
 	"github.com/tmc/langchaingo/prompts"
 
 	"github.com/tmc/langchaingo/llms"
@@ -28,6 +29,11 @@ import (
 	"coding-assistant/internal/model"
 )
 
+type AgentModelConfiguration struct {
+	Model       model.Model
+	OllamaModel string
+}
+
 type Agent struct {
 	llm                 llms.Model
 	memory              schema.ChatMessageHistory
@@ -36,23 +42,21 @@ type Agent struct {
 	todoList            string
 }
 
-func NewAgent(modelType model.Model, directory string, debug bool) (*Agent, error) {
+func NewAgent(modelConfiguration AgentModelConfiguration, directory string, debug bool) (*Agent, error) {
 	var llm llms.Model
 	var err error
 
-	switch modelType {
+	switch modelConfiguration.Model {
 	case model.ModelGPT4_1:
-		llm, err = openai.New()
-	case model.ModelCodex:
-		// NOTE: This is an assumption. Adjust if Codex requires a different client or model name.
-		llm, err = openai.New(openai.WithModel("code-davinci-002")) // Example model name for Codex
+		llm, err = openai.New(openai.WithModel("gpt-4.1"))
 	case model.ModelClaude3_5Sonnet:
-		// NOTE: This is an assumption. Adjust if Claude 3.5 Sonnet requires specific Anthropic client configuration.
 		llm, err = anthropic.New()
 	case model.ModelGemini2_5Pro:
 		llm, err = googleai.New(context.Background(), googleai.WithDefaultModel("gemini-2.5-pro"))
+	case model.ModelOllama:
+		llm, err = ollama.New(ollama.WithModel(modelConfiguration.OllamaModel))
 	default:
-		return nil, fmt.Errorf("unsupported model type: %v", modelType)
+		return nil, fmt.Errorf("unsupported model type: %v", modelConfiguration.Model)
 	}
 
 	if err != nil {

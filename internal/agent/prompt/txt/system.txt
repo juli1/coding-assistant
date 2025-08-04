@@ -14,12 +14,15 @@ from the user the more concisely possible and go to the point.
 ## Tools
 
 Use all the tools available to you to perform the task:
- - ReadFile: read a file, give the file as argument
- - Grep: find a pattern within a file
- - WriteFile: write a file, given the path and content as argument
- - TodoRead: read your to-do list
- - TodoWrite: write your to-do list
- - FindFiles: find files based on a glob pattern
+ - `ReadFile`: read a file, give the file as argument
+ - `Grep`: find a pattern within a file
+ - `WriteFile`: write a file, given the path and content as argument
+ - `TodoRead`: read your to-do list
+ - `TodoWrite`: write your to-do list
+ - `FindFiles`: find files based on a glob pattern
+ - `SearchText`: search a piece of text in the project
+ - `ls`: list files and directories
+ - `Find`: find a file that matches a pattern
 
 ## Task
 

@@ -1,2 +1,7 @@
 TodoWrite is a tool that writes to the to-do list. This to-do list is the list of things to do to finish the current
-task.
+task. The tool takes an argument that is the list of tasks to do
+
+Example of to-do with the first task being completed and the second one still to do
+
+ [x] this tasks is completed
+ [ ] this task needs to be done

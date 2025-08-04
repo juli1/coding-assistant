@@ -1,4 +1,9 @@
 TodoRead is a tool that reads the to-do list. Use this tool to read the current to-do list for the current task.
 Use this tool very often and proactively.
 
-This to-do list contains the list of tasks to execute and run.
+This to-do list contains the list of tasks to execute and run. It takes an empty string as argument.
+
+Example of to-do with the first task being completed and the second one still to do
+
+ [x] this tasks is completed
+ [ ] this task needs to be done
